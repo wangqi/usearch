@@ -426,10 +426,12 @@ public class USearchIndex: NSObject {
      * @brief Adds a labeled vector to the index.
      * @param vector Half-precision vector.
      */
-    @available(iOS 14.0, macOS 11.0, tvOS 14.0, watchOS 7.0, visionOS 1.0, *)
+    #if !os(macOS)
+    @available(iOS 14.0, tvOS 14.0, watchOS 7.0, visionOS 1.0, *)
     public func addHalf(key: USearchKey, vector: UnsafePointer<Float16>) throws {
         try throwing { usearch_add(nativeIndex, key, vector, USearchScalar.f16.toNative(), $0) }
     }
+    #endif
 
     /**
      * @brief Approximate nearest neighbors search.
@@ -439,7 +441,8 @@ public class USearchIndex: NSObject {
      * @param distances Optional output buffer for (increasing) distances to approximate neighbors.
      * @return Number of matches exported to `keys` and `distances`.
      */
-    @available(iOS 14.0, macOS 11.0, tvOS 14.0, watchOS 7.0, visionOS 1.0, *)
+    #if !os(macOS)
+    @available(iOS 14.0, tvOS 14.0, watchOS 7.0, visionOS 1.0, *)
     public func searchHalf(
         vector: UnsafePointer<Float16>,
         count: UInt32,
@@ -451,6 +454,7 @@ public class USearchIndex: NSObject {
         }
         return UInt32(found)
     }
+    #endif
 
     /**
     * @brief Retrieves a labeled half-precision vector from the index.
@@ -458,13 +462,15 @@ public class USearchIndex: NSObject {
     * @param count For multi-indexes, the number of vectors to retrieve.
     * @return Number of vectors exported to `vector`.
     */
-    @available(iOS 14.0, macOS 11.0, tvOS 14.0, watchOS 7.0, visionOS 1.0, *)
+    #if !os(macOS)
+    @available(iOS 14.0, tvOS 14.0, watchOS 7.0, visionOS 1.0, *)
     public func getHalf(key: USearchKey, vector: UnsafeMutablePointer<Float16>, count: UInt32) throws -> UInt32 {
         let result = try throwing {
             usearch_get(nativeIndex, key, Int(count), vector, USearchScalar.f16.toNative(), $0)
         }
         return UInt32(result)
     }
+    #endif
 
     /**
      * @brief Approximate nearest neighbors search.
@@ -476,7 +482,8 @@ public class USearchIndex: NSObject {
      * @param distances Optional output buffer for (increasing) distances to approximate neighbors.
      * @return Number of matches exported to `keys` and `distances`.
      */
-    @available(iOS 14.0, macOS 11.0, tvOS 14.0, watchOS 7.0, visionOS 1.0, *)
+    #if !os(macOS)
+    @available(iOS 14.0, tvOS 14.0, watchOS 7.0, visionOS 1.0, *)
     public func filteredSearchHalf(
         vector: UnsafePointer<Float16>,
         count: UInt32,
@@ -494,6 +501,7 @@ public class USearchIndex: NSObject {
             distances: distances
         )
     }
+    #endif
 
     public func contains(key: USearchKey) throws -> Bool {
         return try throwing { usearch_contains(nativeIndex, key, $0) }
